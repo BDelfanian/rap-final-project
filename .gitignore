@@ -1,4 +1,3 @@
-cat << 'EOF' > .gitignore
 # Nix-related
 /nix/
 result
@@ -39,4 +38,3 @@ docs/
 Thumbs.db
 *.swp
 *~
-EOF
