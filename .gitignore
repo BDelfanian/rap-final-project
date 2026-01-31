@@ -1,40 +1,28 @@
 # Nix-related
-/nix/
+.direnv/
 result
 result-*
-default.nix.drv
-.envrc
-.direnv/
 
-# Positron / RStudio / VS Code
+# Positron / RStudio files
 .Rproj.user/
+*.Rproj
+.vscode/
 .Rhistory
 .RData
-.Ruserdata
-.vscode/
-.idea/
 
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
-env/
-venv/
-.venv/
-
-# Quarto / rendering outputs
-*_files/
+# Quarto / rendering outputs (unless you want to version some)
+_site/
 *.html
 *.pdf
 *.docx
 *.pptx
-_site/
-docs/
 
-# General temp / OS files
+# Python
+__pycache__/
+*.pyc
+.venv/
+.python-version
+
+# General
 .DS_Store
 Thumbs.db
-*.swp
-*~
