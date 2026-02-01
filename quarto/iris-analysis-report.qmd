@@ -1,0 +1,48 @@
+---
+title: "Iris Dataset Analysis – Reproducible Report"
+author: "Behrouz Delfanian"
+date: today
+format: html
+execute:
+  echo: true
+  warning: false
+---
+
+## Introduction
+
+This report analyzes the built-in `iris` dataset using pure functions defined in `functions/R/clean_and_summarize.R`.  
+The analysis covers cleaning, summarizing, and visualizing measurements by species.
+
+## Load and Clean Data
+
+```{r}
+#| label: load-and-clean
+library(tidyverse)
+source("../functions/R/clean_and_summarize.R")
+
+data(iris)
+
+# Clean and filter
+cleaned_iris <- clean_iris(iris)
+```
+
+## Summary Statistics by Species
+
+```{r}
+#| label: summary-table
+summarized <- summarize_by_species(cleaned_iris)
+summarized
+```
+
+## Visualization
+
+```{r}
+#| label: boxplots
+#| fig-width: 10
+#| fig-height: 6
+plot_iris_boxplots(cleaned_iris)
+```
+
+## Conclusion
+The boxplots show clear differences in petal and sepal dimensions across species, especially Iris setosa being distinct in petal length/width.
+This report is fully reproducible thanks to Nix environment and pure functions.

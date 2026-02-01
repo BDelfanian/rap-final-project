@@ -102,4 +102,18 @@ In WSL terminal: `R -e "testthat::test_dir('tests/testthat')"`
 
 In Positron console: `testthat::test_dir('tests/testthat')`
 
+### Step 5 – Create a Simple Quarto Report
 
+#### 5.1 Create the Quarto file
+...
+
+#### 5.2 Write the report content
+...
+
+#### 5.3 Render the report
+
+In terminal (inside project folder):
+
+```bash
+quarto render quarto/iris-analysis-report.qmd
+```
