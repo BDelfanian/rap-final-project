@@ -10,13 +10,6 @@ result-*
 .Rhistory
 .RData
 
-# Quarto / rendering outputs (unless you want to version some)
-_site/
-*.html
-*.pdf
-*.docx
-*.pptx
-
 # Python
 __pycache__/
 *.pyc
@@ -28,6 +21,5 @@ venv/
 .venv/
 
 # General
-test_files
 .DS_Store
 Thumbs.db
