@@ -20,8 +20,12 @@ _site/
 # Python
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
 .venv/
-.python-version
 
 # General
 test_files

@@ -10,6 +10,7 @@ rix(
   r_pkgs = c(
     "tidyverse",         # dplyr, ggplot2, readr, etc.
     "testthat",          # unit testing
+    "devtools",          # added for devtools::test() and package dev workflow
     "languageserver",    # for editor integration
     "quarto"             # quarto CLI
   ),
@@ -19,7 +20,8 @@ rix(
     py_pkgs = c(
       "pandas",
       "seaborn",
-      "matplotlib"
+      "matplotlib",
+      "pytest"
     )
   ),
 

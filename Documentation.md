@@ -61,6 +61,9 @@ Then inside R:
 source("gen-env.R")
 ```
 
+Everytime you update `gen-env.R` file, run the following in WSL terminal:  
+`nix-shell -p R rPackages.rix --run "R -e 'source(\"gen-env.R\")'"`
+
 #### 2.3 Activate the environment for development
 Create a file called `.envrc` in the project root:
 
@@ -80,8 +83,23 @@ Now every time you open a terminal in this folder, it should automatically load 
 
 Open Positron on Windows, install `direnv` extension, open the project folder and confirm the message to restart the environment.
 
-#### 2.4 Initialize Git and prepare for GitHub 
-
-
-
 ### Step 3: Writing Pure Functions
+- Pure functions (same input → same output, no side effects, no globals)
+- Replace loops with map/filter/reduce where natural
+- Self-contained, testable, composable
+
+### Step 4 – Unit Testing
+We prove our functions work as claimed (happy path, edges, errors). We use `testthat` in R and `pytest` in Python.
+
+#### 4.1 Create test files
+...
+
+#### 4.2 R unit tests
+...
+
+#### 4.3 Run the R tests
+In WSL terminal: `R -e "testthat::test_dir('tests/testthat')"`
+
+In Positron console: `testthat::test_dir('tests/testthat')`
+
+
