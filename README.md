@@ -1,7 +1,7 @@
 # Reproducible Analytical Pipelines – Final Project Documentation 
 
 **Course:** Reproducible Analytical Pipelines<a href="https://rap4mads.eu/" target="_blank" rel="noopener noreferrer nofollow"></a>  
-**Repository**: https://github.com/BDelfanian/irisrap 
+**Repository**: https://github.com/BDelfanian/irisrap  
 **Student:** Behrouz Delfanian  
 **Date:** January 2026  
 **Location:** Luxembourg
@@ -28,7 +28,7 @@ The equivalent modern command is:
 nix profile install nixpkgs#cachix
 ```
 
-## Reproducibility instructions
+## Reproducibility Instructions
 
 ```bash
 git clone https://github.com/BDelfanian/irisrap.git
@@ -265,3 +265,64 @@ Then, render:
 quarto render quarto/iris-analysis-report.qmd
 ```
 
+## Step 6 - Orchestration / Pipeline with {targets}
+**Goal**: Automate the entire analysis so that:
+
+- Dependencies are tracked (change a function → only affected targets re-run)
+
+- Results are cached
+
+- Report renders only when needed
+
+- Everything is reproducible
+
+**Tool**: {targets} — the course's primary pipeline tool for R.
+
+### 6.1 Install {targets}
+
+Add to `gen-env.R`:
+
+```r
+r_pkgs = c(
+  ... existing packages ...,
+  "targets",
+  "tarchetypes",       # helpers for Quarto rendering
+  "visNetwork"         # for tar_visnetwork()
+)
+```
+
+Re-generate environment:
+
+```bash
+nix-shell -p R rPackages.rix --run "R -e 'source(\"gen-env.R\")'"
+```
+
+Reload direnv:
+
+```bash
+direnv reload
+```
+
+### 6.2 Create `_targets.R` (pipeline definition)
+Create `_targets.R` in project root.
+
+### 6.3 Run the pipeline
+
+```bash
+# Build everything
+R -e "targets::tar_make()"
+
+# View dependency graph
+R -e "targets::tar_visnetwork()"
+
+# Clean (if you want to re-run)
+R -e "targets::tar_destroy(destroy = 'all')"
+```
+
+> Important: Make user library available in targets pipeline  
+> targets runs in clean R sessions, so prepend the user library in `_targets.R`:
+
+>```r
+>.libPaths(c(Sys.getenv("R_LIBS_USER"), .libPaths()))
+>```
+>This ensures `library(irisrap)` succeeds during pipeline execution.

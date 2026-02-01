@@ -5,7 +5,10 @@
 #  > "testthat",
 #  > "devtools",
 #  > "languageserver",
-#  > "quarto"),
+#  > "quarto",
+#  > "targets",
+#  > "tarchetypes",
+#  > "visNetwork"),
 #  > py_conf = list(py_version = "3.11",
 #  > py_pkgs = c("pandas",
 #  > "seaborn",
@@ -27,8 +30,11 @@ let
       devtools
       languageserver
       quarto
+      tarchetypes
+      targets
       testthat
-      tidyverse;
+      tidyverse
+      visNetwork;
   };
    
   pyconf = builtins.attrValues {

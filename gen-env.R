@@ -12,7 +12,10 @@ rix(
     "testthat",          # unit testing
     "devtools",          # added for devtools::test() and package dev workflow
     "languageserver",    # for editor integration
-    "quarto"             # quarto CLI
+    "quarto",            # quarto CLI
+    "targets",
+    "tarchetypes",       # helpers for Quarto rendering
+    "visNetwork"         # for tar_visnetwork()
   ),
 
   py_conf = list(
