@@ -370,35 +370,30 @@ Run the pipeline + report inside Docker:
 docker run --rm -v $(pwd)/quarto:/app/quarto irisrap
 ```
 
-## Step 8 – Continuous Integration with GitHub Actions
+## Step 8 – Continuous Integration with GitHub Actions (attempted)
+
+**Goal**: Automatically run package checks, unit tests, the {targets} pipeline, and Quarto report rendering on every push/PR.
+
+
+
 
 This step will add **Continuous Integration / Continuous Deployment (CI/CD)** to the project: on every push to the main branch (or pull request), GitHub will automatically:
 
-- Set up the Nix environment
-- Install the local `irisrap` package
-- Run package checks (`devtools::check()`)
-- Run tests (`devtools::test()`)
-- Execute the {targets} pipeline
-- Render the Quarto report
-- Upload the rendered HTML as an artifact (so you can download/view it from GitHub UI)
+A workflow was created in `.github/workflows/ci.yml` that:
+- Sets up Nix
+- Generates the environment from `gen-env.R`
+- Installs the local `irisrap` package to a user library
+- Runs `devtools::check()`, `devtools::test()`, `tar_make()`, and `quarto render`
 
-### 8.1 Create the workflow file
-Create this folder and file in the project root:
+**Result**: The pipeline fails in CI with the error  
+`could not find package 'irisrap' in library paths`
 
-```bash
-mkdir -p .github/workflows
-touch .github/workflows/ci.yml
-```
+**Reason**:  
+The local package is installed in the user library (`~/R/library`), which is correctly prepended in interactive/local sessions via `.envrc` + `.Rprofile` + code-level `.libPaths()` calls. However, GitHub Actions (and isolated `{targets}`/Quarto sessions in general) do not reliably inherit or respect `R_LIBS_USER` without very early, aggressive configuration. Multiple attempts to force the prepend via `tar_script()`, global options, and setup targets did not succeed consistently in the CI environment.
 
-Create `.github/workflows/ci.yml`.
+**Conclusion & reflection**:  
+This highlights a real-world limitation when combining Nix (declarative, read-only libraries) with local custom packages and non-interactive CI runners.  
 
-### 8.2 Commit & push
+For the purpose of this course project, the local reproducibility (Nix + package + pipeline + report) is fully demonstrated and functional. The CI failure is documented as a learning point rather than a critical gap.
 
-### 8.3 Verify in GitHub
-
-- Go to your repo → **Actions** tab.
-- You should see a new workflow run starting.
-- Wait 5–15 minutes (first run is slowest).
-- If green → success!
-- Click the run → **Artifacts** → download `iris-report` → open the HTML.
-
+Workflow file: [.github/workflows/ci.yml](.github/workflows/ci.yml)
