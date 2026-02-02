@@ -370,3 +370,35 @@ Run the pipeline + report inside Docker:
 docker run --rm -v $(pwd)/quarto:/app/quarto irisrap
 ```
 
+## Step 8 – Continuous Integration with GitHub Actions
+
+This step will add **Continuous Integration / Continuous Deployment (CI/CD)** to the project: on every push to the main branch (or pull request), GitHub will automatically:
+
+- Set up the Nix environment
+- Install the local `irisrap` package
+- Run package checks (`devtools::check()`)
+- Run tests (`devtools::test()`)
+- Execute the {targets} pipeline
+- Render the Quarto report
+- Upload the rendered HTML as an artifact (so you can download/view it from GitHub UI)
+
+### 8.1 Create the workflow file
+Create this folder and file in the project root:
+
+```bash
+mkdir -p .github/workflows
+touch .github/workflows/ci.yml
+```
+
+Create `.github/workflows/ci.yml`.
+
+### 8.2 Commit & push
+
+### 8.3 Verify in GitHub
+
+- Go to your repo → **Actions** tab.
+- You should see a new workflow run starting.
+- Wait 5–15 minutes (first run is slowest).
+- If green → success!
+- Click the run → **Artifacts** → download `iris-report` → open the HTML.
+

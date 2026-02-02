@@ -1,0 +1,67 @@
+name: CI - Test, Build Pipeline & Render Report
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Install Nix
+      - name: Set up Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+
+      # Cache Nix store to speed up future runs
+      - name: Cache Nix store
+        uses: cachix/cachix-action@v16
+        with:
+          name: rstats-on-nix
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}  # optional – see below
+
+      # Generate default.nix from gen-env.R
+      - name: Generate Nix environment
+        run: nix-shell -p R rPackages.rix --run "R -e 'source(\"gen-env.R\")'"
+
+      # Create writable user library for irisrap
+      - name: Set up user library
+        run: |
+          mkdir -p ~/R/library
+          echo '.libPaths(c("~/R/library", .libPaths()))' >> ~/.Rprofile
+
+      # Install local irisrap package
+      - name: Install irisrap package
+        run: nix-shell --run "R CMD INSTALL --library=~/R/library ."
+
+      # Run package checks
+      - name: Check package
+        run: nix-shell --run "R -e 'devtools::check()'"
+
+      # Run tests
+      - name: Run tests
+        run: nix-shell --run "R -e 'devtools::test()'"
+
+      # Run targets pipeline
+      - name: Run targets pipeline
+        run: nix-shell --run "R -e 'targets::tar_make()'"
+
+      # Render Quarto report
+      - name: Render Quarto report
+        run: nix-shell --run "quarto render quarto/iris-analysis-report.qmd"
+
+      # Upload rendered report as artifact
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: iris-report
+          path: quarto/iris-analysis-report.html
+          retention-days: 5
